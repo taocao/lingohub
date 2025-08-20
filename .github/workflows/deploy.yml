@@ -34,7 +34,7 @@ jobs:
         run: python build.py
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2  # <- 更新为 v2
+        uses: actions/upload-pages-artifact@v4  # <- 更新为 v2
         with:
           path: site  # 与 build.py 输出目录保持一致
 
