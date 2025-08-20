@@ -21,11 +21,16 @@ index_template = (TEMPLATE_DIR / "index_template.html").read_text(encoding="utf-
 # 文章索引
 articles = {}
 
+# 遍历文章文件
 for file in ARTICLES_DIR.glob("*.md"):
     parts = file.stem.split("-")
-    date = "-".join(parts[:3])          # 文件名前三段当日期 (YYYY-MM-DD)
-    title = " ".join(parts[3:-1])       # 中间部分当标题
-    lang = parts[-1]                    # 最后一段是语言 (en / zh)
+    if len(parts) < 5:
+        print(f"⚠️  跳过文件，文件名格式不正确: {file.name}")
+        continue
+
+    date = "-".join(parts[:3])          # 前三段为日期
+    title = " ".join(parts[3:-1])       # 中间部分为标题
+    lang = parts[-1]                    # 最后一段是语言
 
     with open(file, encoding="utf-8") as f:
         raw_md = f.read()
@@ -42,8 +47,9 @@ for key, meta in articles.items():
     slug = key.replace(" ", "-")
     output_file = SITE_DIR / f"{slug}.html"
 
-    en_content = meta.get("en", "<p><i>No English version available.</i></p>")
-    zh_content = meta.get("zh", "<p><i>暂无中文翻译。</i></p>")
+    # 防止 None 替换报错
+    en_content = meta.get("en") or "<p><i>No English version available.</i></p>"
+    zh_content = meta.get("zh") or "<p><i>暂无中文翻译。</i></p>"
 
     html = article_template.replace("{{title}}", meta["title"])
     html = html.replace("{{date}}", meta["date"])
