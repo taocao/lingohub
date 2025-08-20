@@ -1,12 +1,18 @@
-import os, datetime
+import os
+import shutil
 from pathlib import Path
 import markdown
 
+# 文章目录
 ARTICLES_DIR = Path("articles")
-DIST_DIR = Path("dist")
+# 输出目录统一为 site/
+SITE_DIR = Path("site")
 TEMPLATE_DIR = Path("templates")
 
-DIST_DIR.mkdir(exist_ok=True)
+# 清空旧站点内容
+if SITE_DIR.exists():
+    shutil.rmtree(SITE_DIR)
+SITE_DIR.mkdir(exist_ok=True)
 
 # 加载模板
 article_template = (TEMPLATE_DIR / "article_template.html").read_text(encoding="utf-8")
@@ -34,7 +40,7 @@ for file in ARTICLES_DIR.glob("*.md"):
 # 生成文章页面
 for key, meta in articles.items():
     slug = key.replace(" ", "-")
-    output_file = DIST_DIR / f"{slug}.html"
+    output_file = SITE_DIR / f"{slug}.html"
 
     en_content = meta.get("en", "<p><i>No English version available.</i></p>")
     zh_content = meta.get("zh", "<p><i>暂无中文翻译。</i></p>")
@@ -53,6 +59,6 @@ for key, meta in sorted(articles.items(), reverse=True):
     items_html += f'<li><a class="text-blue-600 underline" href="{slug}.html">{meta["date"]} - {meta["title"]}</a></li>\n'
 
 index_html = index_template.replace("{{articles}}", items_html)
-(DIST_DIR / "index.html").write_text(index_html, encoding="utf-8")
+(SITE_DIR / "index.html").write_text(index_html, encoding="utf-8")
 
-print("✅ Site built successfully. Check dist/index.html")
+print("✅ Site built successfully. Check site/index.html")
