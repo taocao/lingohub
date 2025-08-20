@@ -27,26 +27,24 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio() > 0.85
 
 def clean_title(name):
-    """移除日期和语言后缀"""
-    # 去掉文件扩展名
+    """清洗文件名，去掉日期和语言后缀"""
     name = Path(name).stem
-    # 去掉日期和语言标记
     parts = name.split("-")
-    if parts[-1] in ["en", "zh"]:
+    if parts[-1].lower() in ["en", "zh"]:
         parts = parts[:-1]
-    # 去掉日期格式部分
+    # 移除日期部分
     parts = [p for p in parts if not re.match(r"\d{4}", p)]
-    return "-".join(parts)
+    return " ".join(parts)
 
 def extract_sections(md_text):
-    """如果文件中同时有英文和中文，用## English / ## 中文分段"""
+    """提取单文件中的英文和中文段落"""
     en_html = zh_html = None
     sections = re.split(r"^##\s+", md_text, flags=re.MULTILINE)
     for sec in sections:
-        if sec.strip().startswith("English"):
+        if sec.strip().lower().startswith("english"):
             en_md = "\n".join(sec.strip().splitlines()[1:])
             en_html = markdown.markdown(en_md, extensions=["fenced_code", "tables"])
-        elif sec.strip().startswith("中文") or sec.strip().startswith("Chinese"):
+        elif sec.strip().startswith("中文") or sec.strip().lower().startswith("chinese"):
             zh_md = "\n".join(sec.strip().splitlines()[1:])
             zh_html = markdown.markdown(zh_md, extensions=["fenced_code", "tables"])
     return en_html, zh_html
@@ -56,29 +54,27 @@ for file in ARTICLES_DIR.glob("*.md"):
     with open(file, encoding="utf-8") as f:
         raw_md = f.read()
 
-    # 先尝试提取分段
     en_content, zh_content = extract_sections(raw_md)
 
-    # 如果没有分段，用语言后缀判断
-    if not en_content and not zh_content:
+    # 如果没有分段，使用文件名后缀判断
+    if en_content is None and zh_content is None:
         stem = file.stem.lower()
+        html_content = markdown.markdown(raw_md, extensions=["fenced_code", "tables"])
         if stem.endswith("-en"):
-            en_content = markdown.markdown(raw_md, extensions=["fenced_code", "tables"])
+            en_content = html_content
         elif stem.endswith("-zh"):
-            zh_content = markdown.markdown(raw_md, extensions=["fenced_code", "tables"])
+            zh_content = html_content
         else:
             # 默认中文
-            zh_content = markdown.markdown(raw_md, extensions=["fenced_code", "tables"])
+            zh_content = html_content
 
-    # 标题清洗，用于归类类似名字
+    # 清洗标题，便于归类
     title_key = clean_title(file.stem)
 
     # 查找已有类似文章
-    found = False
-    for key in articles.keys():
+    for key in list(articles.keys()):
         if similar(title_key, key):
             title_key = key
-            found = True
             break
 
     if title_key not in articles:
