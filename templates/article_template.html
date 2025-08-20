@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6 bg-gray-100">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-2">{{title}}</h1>
+    <p class="text-sm text-gray-500 mb-4">{{date}}</p>
+
+    <div class="flex gap-2 mb-6">
+      <button onclick="showEnglish()" class="px-3 py-1 bg-blue-500 text-white rounded">English</button>
+      <button onclick="showChinese()" class="px-3 py-1 bg-green-500 text-white rounded">中文</button>
+      <button onclick="showBoth()" class="px-3 py-1 bg-purple-500 text-white rounded">Bilingual</button>
+    </div>
+
+    <div id="english">{{en}}</div>
+    <div id="chinese" class="hidden">{{zh}}</div>
+    <div id="bilingual" class="hidden">
+      <div class="grid grid-cols-2 gap-4">
+        <div>{{en}}</div>
+        <div>{{zh}}</div>
+      </div>
+    </div>
+
+    <a href="index.html" class="text-blue-600 underline mt-6 block">← Back to index</a>
+  </div>
+
+  <script>
+    function showEnglish() {
+      document.getElementById("english").classList.remove("hidden");
+      document.getElementById("chinese").classList.add("hidden");
+      document.getElementById("bilingual").classList.add("hidden");
+    }
+    function showChinese() {
+      document.getElementById("english").classList.add("hidden");
+      document.getElementById("chinese").classList.remove("hidden");
+      document.getElementById("bilingual").classList.add("hidden");
+    }
+    function showBoth() {
+      document.getElementById("english").classList.add("hidden");
+      document.getElementById("chinese").classList.add("hidden");
+      document.getElementById("bilingual").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
