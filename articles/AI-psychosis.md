@@ -1,4 +1,5 @@
 ﻿## English
+ 
 Microsoft boss troubled by rise in reports of 'AI psychosis'
 bbc.com | August 20, 2025
 
@@ -77,7 +78,6 @@ What is AI and how does it work?
 Update that made ChatGPT 'dangerously' sycophantic pulled
 
 ## 中文
-
 
 遵命，语言的探索者。
 
