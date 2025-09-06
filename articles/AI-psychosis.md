@@ -1,7 +1,7 @@
 ﻿## English
  
 Microsoft boss troubled by rise in reports of 'AI psychosis'
-bbc.com | August 20, 2025
+August 20, 2025
 
 Getty Images
 There are increasing reports of people suffering "AI psychosis", Microsoft's head of artificial intelligence (AI), Mustafa Suleyman, has warned.
