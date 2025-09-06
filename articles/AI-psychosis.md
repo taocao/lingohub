@@ -1,5 +1,5 @@
-﻿## English
- 
+## English
+
 Microsoft boss troubled by rise in reports of 'AI psychosis'
 August 20, 2025
 
